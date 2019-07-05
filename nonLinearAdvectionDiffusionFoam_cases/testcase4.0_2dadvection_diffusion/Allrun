@@ -1,0 +1,7 @@
+foamCleanTutorials
+blockMesh
+cp -r 0/U.org 0/U
+setFields
+nonLinearAdvectionDiffusionFoam
+postProcess -time 0 -field U
+paraview --state=paraviewstate.pvsm

@@ -1,0 +1,4 @@
+foamCleanTutorials
+rm -rf dynamicCode
+cp -r 0/U.org 0/U
+blockMesh

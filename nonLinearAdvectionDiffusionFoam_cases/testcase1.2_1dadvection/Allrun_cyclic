@@ -1,0 +1,7 @@
+foamCleanTutorials
+blockMesh
+cp -r 0/U_cyclic.org 0/U
+nonLinearAdvectionDiffusionFoam
+postProcess -time 0 -field U
+gnuplot gnuplot.plt
+display Results/*.png &

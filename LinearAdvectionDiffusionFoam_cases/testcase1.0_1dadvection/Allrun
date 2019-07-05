@@ -1,0 +1,6 @@
+blockMesh
+cp -r 0/U.org 0/U
+setFields
+LinearAdvectionDiffusionFoam
+postProcess -time 0 -field U
+gnuplot gnuplot.plt

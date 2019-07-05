@@ -1,0 +1,8 @@
+foamCleanTutorials
+blockMesh -dict system/blockMeshDict_fixed
+cp -r 0/U_fixed.org 0/U
+setFields
+nonLinearAdvectionDiffusionFoam
+postProcess -time 0 -field U
+gnuplot gnuplot.plt
+display Results/*.png &

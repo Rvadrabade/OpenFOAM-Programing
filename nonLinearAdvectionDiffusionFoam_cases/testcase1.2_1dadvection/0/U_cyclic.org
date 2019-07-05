@@ -1,0 +1,83 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  5                                     |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volVectorField;
+    object      U;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+//#include "initialConditions"
+
+dimensions      [0 1 -1 0 0 0 0];
+
+//for more details refere to "http://www.cfd-china.com/assets/uploads/files/1535073081321-programming_of_ics.pdf"
+
+internalField   #codeStream
+{
+    codeInclude
+    #{
+        #include "fvCFD.H"
+    #};
+
+    codeOptions
+    #{
+        -I$(LIB_SRC)/finiteVolume/lnInclude \
+        -I$(LIB_SRC)/meshTools/lnInclude
+    #};
+
+    //libs needed to visualize BC in paraview
+    codeLibs
+    #{
+        -lmeshTools \
+	    -lfiniteVolume
+    #};
+
+    code
+    #{
+        const IOdictionary& d = static_cast<const IOdictionary&>(dict);
+        const fvMesh& mesh = refCast<const fvMesh>(d.db());
+        vectorField U(mesh.nCells(), vector(1.0, 0, 0));
+
+        forAll(U, i)
+        {
+            const scalar x 	= mesh.C()[i][0];
+            const scalar xc = 1.0;			
+            const scalar r 	= 2;	
+		
+
+            if (x >= 0.5 && x<=1.0)
+            {
+                U[i] = vector(exp(10.0*log(2.0)*pow((x-xc)/r,2)), 0., 0.);
+            }
+        }
+
+        U.writeEntry("", os);
+    #};
+};
+
+boundaryField
+{
+    Lwall
+    {
+        type            cyclic;
+    }
+
+    Rwall
+    {
+        type            cyclic;
+    }
+
+    frontAndBack
+    {
+        type            empty;
+    }
+}
+
+// ************************************************************************* //
